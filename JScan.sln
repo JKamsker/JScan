@@ -3,30 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JScan", "JScan\JScan.csproj", "{0315DFAA-0B70-4037-BF32-238555FB1177}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JScan", "JScan\JScan.csproj", "{EF2A1426-59A5-4447-A01A-D9714EED28C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JScan-Example", "JScan-Example\JScan-Example.csproj", "{E98DF485-3F1A-452C-A6B4-28537B8AFACA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Debug|x64 = Debug|x64
-		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
-		Release|x64 = Release|x64
-		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Debug|x64.ActiveCfg = Debug|x64
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Debug|x64.Build.0 = Debug|x64
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Debug|x86.ActiveCfg = Debug|x86
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Debug|x86.Build.0 = Debug|x86
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Release|x64.ActiveCfg = Release|x64
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Release|x64.Build.0 = Release|x64
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Release|x86.ActiveCfg = Release|x86
-		{0315DFAA-0B70-4037-BF32-238555FB1177}.Release|x86.Build.0 = Release|x86
+		{EF2A1426-59A5-4447-A01A-D9714EED28C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF2A1426-59A5-4447-A01A-D9714EED28C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF2A1426-59A5-4447-A01A-D9714EED28C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF2A1426-59A5-4447-A01A-D9714EED28C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E98DF485-3F1A-452C-A6B4-28537B8AFACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E98DF485-3F1A-452C-A6B4-28537B8AFACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E98DF485-3F1A-452C-A6B4-28537B8AFACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E98DF485-3F1A-452C-A6B4-28537B8AFACA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

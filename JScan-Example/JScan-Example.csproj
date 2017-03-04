@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{EF2A1426-59A5-4447-A01A-D9714EED28C4}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>JScan</RootNamespace>
-    <AssemblyName>JScan</AssemblyName>
+    <ProjectGuid>{E98DF485-3F1A-452C-A6B4-28537B8AFACA}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>JScan_Example</RootNamespace>
+    <AssemblyName>JScan-Example</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -40,16 +42,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Net\Data\AddressByteCollection.cs" />
-    <Compile Include="Net\Data\IScanStorage.cs" />
-    <Compile Include="Net\NetMask.cs" />
-    <Compile Include="Net\Scan\PingScan.cs" />
-    <Compile Include="Net\Scan\ScanSettings.cs" />
-    <Compile Include="Net\Scan\ScanWrapper.cs" />
-    <Compile Include="Net\Scan\TCPScan.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\CmdGenerator.cs" />
-    <Compile Include="Utilities\IPFunctions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\JScan\JScan.csproj">
+      <Project>{ef2a1426-59a5-4447-a01a-d9714eed28c4}</Project>
+      <Name>JScan</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
