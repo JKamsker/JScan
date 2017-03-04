@@ -6,12 +6,6 @@ using JScan.Net.Data;
 using JScan.Net.Scan;
 ```
 
-Example code to shutdown the remote machine:
-```csharp
-ConHandler ch = new ConHandler("127.0.0.1", 3000);
-string command = CmdGenerator.getCmd("shutdown /s");
-ch.ConExec(command);
-```
 
 #Fast Portscanning
 The library also supports scanning of the whole current lan ip address range
