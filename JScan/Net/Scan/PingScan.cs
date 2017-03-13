@@ -1,11 +1,11 @@
-﻿using System;
+﻿using JScan.Utilities;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
-using JScan.Utilities;
 
 namespace JScan.Net.Scan
 {
@@ -35,7 +35,7 @@ namespace JScan.Net.Scan
         }
 
         /// <summary>
-        ///
+        /// Scans the given IP Address list asyncronously
         /// </summary>
         /// <param name="addresses"></param>
         /// <param name="uMlimiter">Prevents memory leakage</param>
@@ -60,6 +60,11 @@ namespace JScan.Net.Scan
             }
         }
 
+        /// <summary>
+        /// Is called when the ping succeeded or timed out
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PingCompletedCallback(object sender, PingCompletedEventArgs e)
         {
             IPAddress NextScanAddress = null;

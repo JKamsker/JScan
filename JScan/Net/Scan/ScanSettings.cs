@@ -1,7 +1,7 @@
-﻿using System;
+﻿using JScan.Net.Data;
+using System;
 using System.Collections.Generic;
 using System.Net;
-using JScan.Net.Data;
 
 namespace JScan.Net.Scan
 {

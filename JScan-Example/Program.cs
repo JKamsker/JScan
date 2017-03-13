@@ -1,8 +1,8 @@
-﻿using System;
+﻿using JScan.Net.Data;
+using JScan.Net.Scan;
+using System;
 using System.Collections.Generic;
 using System.Net;
-using JScan.Net.Data;
-using JScan.Net.Scan;
 
 namespace JScan_Example
 {
