@@ -41,6 +41,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Net\Data\AddressByteCollection.cs" />
+    <Compile Include="Net\Data\EIPScanMode.cs" />
+    <Compile Include="Net\Data\EScanMode.cs" />
+    <Compile Include="Net\Data\ETCPortState.cs" />
     <Compile Include="Net\Data\IScanStorage.cs" />
     <Compile Include="Net\NetMask.cs" />
     <Compile Include="Net\Scan\PingScan.cs" />

@@ -1,23 +1,13 @@
-﻿using System;
+﻿using JScan.Net.Data;
+using System;
 using System.Net;
 using System.Net.Sockets;
 
 namespace JScan.Net.Scan
 {
-    /// <summary>
-    ///
-    /// </summary>
-    public enum TCPortState
+    public class TCPScan : IDisposable
     {
-        init,
-        started,
-        open,
-        closed
-    }
-
-    public class TCPScan
-    {
-        public TCPortState TcpState { get; private set; }
+        public ETCPortState TcpState { get; private set; }
         public IPAddress Host { get; private set; }
         public int Port { get; private set; }
 
@@ -28,27 +18,27 @@ namespace JScan.Net.Scan
         internal TCPScan(IPAddress host, int port, Action<TCPScan> portScanFinishedCallback)
         {
             _cbaPortScanFinished = portScanFinishedCallback;
-            TcpState = TCPortState.init;
+            TcpState = ETCPortState.init;
             Host = host;
             Port = port;
 
             AsyncCallback cllbck = new AsyncCallback(PortScanCompletedCallback);
             _tcpcli = new TcpClient(AddressFamily.InterNetwork);
             _tcpcli.BeginConnect(host, port, cllbck, null);
-            TcpState = TCPortState.started;
+            TcpState = ETCPortState.started;
         }
 
         private void PortScanCompletedCallback(IAsyncResult ar)
         {
             if (_tcpcli.Connected)
             {
-                TcpState = TCPortState.open;
+                TcpState = ETCPortState.open;
                 _tcpcli.Close();
             }
             else
             {
                 //Offline
-                TcpState = TCPortState.closed;
+                TcpState = ETCPortState.closed;
             }
             _tcpcli = null;
 

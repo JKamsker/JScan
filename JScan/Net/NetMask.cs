@@ -54,6 +54,13 @@ namespace JScan.Net
             return retVar;
         }
 
+
+        /// <summary>
+        /// Calculate all ips between the two ones 
+        /// </summary>
+        /// <param name="ip1"></param>
+        /// <param name="ip2"></param>
+        /// <returns></returns>
         private static List<IPAddress> GetIpRange(byte[] ip1, byte[] ip2)
         {
             var retVar = new List<IPAddress>();

@@ -22,22 +22,22 @@ namespace JScan_Example
             //Initialize a new Settings object
             ScanSettings ScS = new ScanSettings(
                  scanPorts: new UInt16[] { 22 },    //Define which ports should be searched for
-                 ipmode: IPScanMode.AllSubnet,      //Scan all ips from my subnet
-                 mode: ScanMode.AsyncProgressive,   //Don't block the current progress and call the callback: on finish, on ip dedection
+                 ipmode: EIPScanMode.AllSubnet,      //Scan all ips from my subnet
+                 mode: EScanMode.AsyncProgressive,   //Don't block the current progress and call the callback: on finish, on ip dedection
                  pingtimeout: (int)TimeSpan.FromSeconds(2).TotalMilliseconds //Timeout for pings
            );
 
             //Action which is called when an open port/online ip is found
             ScS.progressiveAsyncScanStatusChangedCallback = new Action<TCPScan>((TCPScan ar) =>
             {
-                if (ar.TcpState == TCPortState.open)
+                if (ar.TcpState == ETCPortState.open)
                 {
                     Console.WriteLine("{0}:{1} {2}", ar.Host, ar.Port, ar.TcpState);
                 }
             });
 
             //This one is called when the scan has been finished
-            ScS.completeAsyncScanFinishedCallback = new Action<Dictionary<IPAddress, Dictionary<int, TCPortState>>>(ar =>
+            ScS.completeAsyncScanFinishedCallback = new Action<Dictionary<IPAddress, Dictionary<int, ETCPortState>>>(ar =>
             {
                 Console.WriteLine("Finished Scan asyncronously");
             });
@@ -56,8 +56,8 @@ namespace JScan_Example
             //Initialize a new Settings object
             ScanSettings ScS = new ScanSettings(
                    scanPorts: new UInt16[] { 80 },  //Define which ports should be searched for
-                   ipmode: IPScanMode.List,         //Scan for a list of ip's
-                   mode: ScanMode.Synchronous,      //Run syncronously
+                   ipmode: EIPScanMode.List,         //Scan for a list of ip's
+                   mode: EScanMode.Synchronous,      //Run syncronously
                    pingtimeout: (int)TimeSpan.FromSeconds(2).TotalMilliseconds, //Timeout for pings
                    StorageData: (IScanStorage)new ScanStorageListData(new[] {
                        IPAddress.Parse("10.0.0.1"), //IP 1 to scan for

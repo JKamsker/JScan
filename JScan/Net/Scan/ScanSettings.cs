@@ -5,24 +5,19 @@ using System.Net;
 
 namespace JScan.Net.Scan
 {
-    public enum ScanMode
-    {
-        AsyncComplete,
-        AsyncProgressive,
-        Synchronous
-    }
-
-    public enum IPScanMode
-    {
-        AllSubnet,
-        Subnet,
-        Range,
-        List
-    }
-
     public class ScanSettings
     {
-        public ScanSettings(IScanStorage StorageData = null, UInt16[] scanPorts = null, IPScanMode ipmode = IPScanMode.AllSubnet, ScanMode mode = ScanMode.Synchronous, int pingtimeout = 10000)
+        internal EScanMode Mode { get; private set; }
+        internal EIPScanMode IpMode { get; private set; }
+        public IScanStorage Storage { get; set; }
+        internal UInt16[] portList { get; private set; }
+        internal int PingTimeout;
+
+        internal Action<TCPScan> _progressiveAsyncScanStatusChangedCallback;
+        internal Action<Dictionary<IPAddress, Dictionary<int, ETCPortState>>> _completeAsyncScanFinishedCallback;
+
+        public ScanSettings(IScanStorage StorageData = null, UInt16[] scanPorts = null,
+            EIPScanMode ipmode = EIPScanMode.AllSubnet, EScanMode mode = EScanMode.Synchronous, int pingtimeout = 10000)
         {
             IpMode = ipmode;
             Mode = mode;
@@ -31,31 +26,22 @@ namespace JScan.Net.Scan
 
             switch (ipmode)
             {
-                case IPScanMode.List:
+                case EIPScanMode.List:
                     Storage = StorageData == null ? new ScanStorageListData() : (ScanStorageListData)StorageData;
                     break;
 
-                case IPScanMode.Subnet:
+                case EIPScanMode.Subnet:
                     Storage = new ScanStorageMaskData((List<AddressByteCollection>)StorageData);
                     break;
 
-                case IPScanMode.Range:
+                case EIPScanMode.Range:
                 default:
                     break;
             }
         }
 
-        internal ScanMode Mode { get; private set; }
-        internal IPScanMode IpMode { get; private set; }
-        public IScanStorage Storage { get; set; }
-        internal UInt16[] portList { get; private set; }
-        internal int PingTimeout;
-
-        internal Action<TCPScan> _progressiveAsyncScanStatusChangedCallback;
-        internal Action<Dictionary<IPAddress, Dictionary<int, TCPortState>>> _completeAsyncScanFinishedCallback;
-
         /// <summary>
-        /// Can only be used if <see cref="ScanMode"/> is AsyncProgressive
+        /// Can only be used if <see cref="EScanMode"/> is AsyncProgressive
         /// </summary>
         public Action<TCPScan> progressiveAsyncScanStatusChangedCallback
         {
@@ -65,7 +51,7 @@ namespace JScan.Net.Scan
             }
             set
             {
-                if (Mode == ScanMode.AsyncProgressive)
+                if (Mode == EScanMode.AsyncProgressive)
                     _progressiveAsyncScanStatusChangedCallback = value;
                 else
                     throw new Exception("The Current mode doesn't support Asynch Progressive Status Callbacks");
@@ -73,9 +59,9 @@ namespace JScan.Net.Scan
         }
 
         /// <summary>
-        /// Can only be used if <see cref="ScanMode"/> is AsyncComplete or AsyncProgressive
+        /// Can only be used if <see cref="EScanMode"/> is AsyncComplete or AsyncProgressive
         /// </summary>
-        public Action<Dictionary<IPAddress, Dictionary<int, TCPortState>>> completeAsyncScanFinishedCallback
+        public Action<Dictionary<IPAddress, Dictionary<int, ETCPortState>>> completeAsyncScanFinishedCallback
         {
             get
             {
@@ -83,7 +69,7 @@ namespace JScan.Net.Scan
             }
             set
             {
-                if (Mode == ScanMode.AsyncComplete || Mode == ScanMode.AsyncProgressive)
+                if (Mode == EScanMode.AsyncComplete || Mode == EScanMode.AsyncProgressive)
                     _completeAsyncScanFinishedCallback = value;
                 else
                     throw new Exception("The Current mode doesn't support Asynch Completition Status Callbacks");
