@@ -48,7 +48,6 @@
     <Compile Include="Net\Scan\ScanWrapper.cs" />
     <Compile Include="Net\Scan\TCPScan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\CmdGenerator.cs" />
     <Compile Include="Utilities\IPFunctions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
