@@ -3,7 +3,7 @@ using System.Net;
 
 namespace JScan.Utilities
 {
-    public static class IPFunctions
+    public static class IpFunctions
     {
         public static uint ToUint(this IPAddress input)
         {

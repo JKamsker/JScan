@@ -8,33 +8,34 @@ namespace JScan.Net.Scan
     public class ScanSettings
     {
         internal EScanMode Mode { get; private set; }
-        internal EIPScanMode IpMode { get; private set; }
+        internal EipScanMode IpMode { get; private set; }
         public IScanStorage Storage { get; set; }
-        internal UInt16[] portList { get; private set; }
+        internal ushort[] PortList { get; private set; }
         internal int PingTimeout;
 
-        internal Action<TCPScan> _progressiveAsyncScanStatusChangedCallback;
-        internal Action<Dictionary<IPAddress, Dictionary<int, ETCPortState>>> _completeAsyncScanFinishedCallback;
+        private Action<TcpScan> _progressiveAsyncScanStatusChangedCallback;
+        private Action<Dictionary<IPAddress, Dictionary<int, EtcPortState>>> _completeAsyncScanFinishedCallback;
 
-        public ScanSettings(IScanStorage StorageData = null, UInt16[] scanPorts = null,
-            EIPScanMode ipmode = EIPScanMode.AllSubnet, EScanMode mode = EScanMode.Synchronous, int pingtimeout = 10000)
+        public ScanSettings(IScanStorage storageData = null, UInt16[] scanPorts = null,
+            EipScanMode ipmode = EipScanMode.AllSubnet, EScanMode mode = EScanMode.Synchronous, int pingtimeout = 10000)
         {
             IpMode = ipmode;
             Mode = mode;
-            portList = scanPorts == null ? new UInt16[] { 3000, 3001 } : scanPorts;
+            PortList = scanPorts ?? (new ushort[] { 3000, 3001 });
             PingTimeout = pingtimeout;
 
             switch (ipmode)
             {
-                case EIPScanMode.List:
-                    Storage = StorageData == null ? new ScanStorageListData() : (ScanStorageListData)StorageData;
+                case EipScanMode.List:
+                    Storage = storageData == null ? new ScanStorageListData() : (ScanStorageListData)storageData;
                     break;
 
-                case EIPScanMode.Subnet:
-                    Storage = new ScanStorageMaskData((List<AddressByteCollection>)StorageData);
+                case EipScanMode.Subnet:
+                    Storage = new ScanStorageMaskData((List<AddressByteCollection>)storageData);
                     break;
 
-                case EIPScanMode.Range:
+                case EipScanMode.Range:
+                    throw new NotImplementedException();
                 default:
                     break;
             }
@@ -43,7 +44,7 @@ namespace JScan.Net.Scan
         /// <summary>
         /// Can only be used if <see cref="EScanMode"/> is AsyncProgressive
         /// </summary>
-        public Action<TCPScan> progressiveAsyncScanStatusChangedCallback
+        public Action<TcpScan> ProgressiveAsyncScanStatusChangedCallback
         {
             get
             {
@@ -61,7 +62,7 @@ namespace JScan.Net.Scan
         /// <summary>
         /// Can only be used if <see cref="EScanMode"/> is AsyncComplete or AsyncProgressive
         /// </summary>
-        public Action<Dictionary<IPAddress, Dictionary<int, ETCPortState>>> completeAsyncScanFinishedCallback
+        public Action<Dictionary<IPAddress, Dictionary<int, EtcPortState>>> CompleteAsyncScanFinishedCallback
         {
             get
             {

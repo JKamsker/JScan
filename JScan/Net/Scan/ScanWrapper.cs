@@ -8,22 +8,21 @@ namespace JScan.Net.Scan
 {
     public class ScanWrapper
     {
-        private Action<TCPScan> TCPScanChanged;
+        private Action<TcpScan> TCPScanChanged;
         private Action<IPAddress> pingScanSuccessCb;
 
-        private List<TCPScan> ActiveTCPScan = new List<TCPScan>();
+        private List<TcpScan> ActiveTCPScan = new List<TcpScan>();
         private ScanSettings _settings;
         private PingScan _ps;
 
-        public Dictionary<IPAddress, Dictionary<int, ETCPortState>> Results { get { return _resultDict; } }
-        private Dictionary<IPAddress, Dictionary<int, ETCPortState>> _resultDict;
+        public Dictionary<IPAddress, Dictionary<int, EtcPortState>> Results { get; private set; }
 
         public ScanWrapper(ScanSettings settings)
         {
-            TCPScanChanged = new Action<TCPScan>(TCPScanChangedCallback);
-            pingScanSuccessCb = new Action<IPAddress>(pingStatusSuccessCallback);
+            TCPScanChanged = TcpScanChangedCallback;
+            pingScanSuccessCb = PingStatusSuccessCallback;
             _settings = settings;
-            _resultDict = new Dictionary<IPAddress, Dictionary<int, ETCPortState>>();
+            Results = new Dictionary<IPAddress, Dictionary<int, EtcPortState>>();
         }
 
         /// <summary>
@@ -37,24 +36,27 @@ namespace JScan.Net.Scan
 
             switch (_settings.IpMode)
             {
-                case EIPScanMode.AllSubnet:
-                    ipAddresses = NetMask.GetAllIP();
+                case EipScanMode.AllSubnet:
+                    ipAddresses = NetMask.GetAllIp();
                     break;
 
-                case EIPScanMode.Subnet:
+                case EipScanMode.Subnet:
                     ipAddresses = NetMask.GetIpsInMask(((ScanStorageMaskData)_settings.Storage).MaskData.ToArray());
                     break;
 
-                case EIPScanMode.Range:
+                case EipScanMode.Range:
                     throw new NotImplementedException();
-                case EIPScanMode.List:
-                    ipAddresses = ((ScanStorageListData)_settings.Storage).IPAddresses;
+                case EipScanMode.List:
+                    ipAddresses = ((ScanStorageListData)_settings.Storage).IpAddresses;
                     break;
 
                 default:
                     break;
             }
-
+            if (ipAddresses == null)
+            {
+                throw new Exception("No ip Addresses in Stack");
+            }
             _ps = new PingScan(pingScanSuccessCb, _settings.PingTimeout);
 
             _ps.InitScan(ipAddresses.ToArray());
@@ -72,20 +74,20 @@ namespace JScan.Net.Scan
         /// Decides what happens when a ping succeeded
         /// </summary>
         /// <param name="ac"></param>
-        private void pingStatusSuccessCallback(IPAddress ac)
+        private void PingStatusSuccessCallback(IPAddress ac)
         {
             //Check if it's a ping-finished call
             if (ac == null)
             {
                 if ((_settings.Mode == EScanMode.AsyncProgressive || _settings.Mode == EScanMode.AsyncComplete) && ActiveTCPScan.Count == 0 && _ps.PingCompleted)
-                    _settings.completeAsyncScanFinishedCallback?.Invoke(_resultDict);
+                    _settings.CompleteAsyncScanFinishedCallback?.Invoke(Results);
                 return;
             }
-            _resultDict[ac] = new Dictionary<int, ETCPortState>();
-            foreach (var port in _settings.portList)
+            Results[ac] = new Dictionary<int, EtcPortState>();
+            foreach (var port in _settings.PortList)
             {
-                _resultDict[ac][port] = ETCPortState.init;
-                lock (ActiveTCPScan) ActiveTCPScan.Add(new TCPScan(ac, port, TCPScanChanged));
+                Results[ac][port] = EtcPortState.Init;
+                lock (ActiveTCPScan) ActiveTCPScan.Add(new TcpScan(ac, port, TCPScanChanged));
             }
         }
 
@@ -93,17 +95,17 @@ namespace JScan.Net.Scan
         /// Decides what happens when a port scan finishes (success/failure)
         /// </summary>
         /// <param name="res"></param>
-        private void TCPScanChangedCallback(TCPScan res)
+        private void TcpScanChangedCallback(TcpScan res)
         {
-            _resultDict[res.Host][res.Port] = res.TcpState;
+            Results[res.Host][res.Port] = res.TcpState;
 
             lock (ActiveTCPScan) ActiveTCPScan.Remove(res);
 
             if (_settings.Mode == EScanMode.AsyncProgressive)
-                _settings.progressiveAsyncScanStatusChangedCallback?.Invoke(res);
+                _settings.ProgressiveAsyncScanStatusChangedCallback?.Invoke(res);
 
             if ((_settings.Mode == EScanMode.AsyncProgressive || _settings.Mode == EScanMode.AsyncComplete) && ActiveTCPScan.Count == 0 && _ps.PingCompleted)
-                _settings.completeAsyncScanFinishedCallback?.Invoke(_resultDict);
+                _settings.CompleteAsyncScanFinishedCallback?.Invoke(Results);
         }
     }
 }

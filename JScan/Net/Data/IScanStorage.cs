@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 
 namespace JScan.Net.Data
@@ -9,23 +10,23 @@ namespace JScan.Net.Data
 
     public class ScanStorageListData : IScanStorage
     {
-        public List<IPAddress> IPAddresses;
+        public List<IPAddress> IpAddresses;
 
         public ScanStorageListData()
         {
-            IPAddresses = new List<IPAddress>();
+            IpAddresses = new List<IPAddress>();
         }
 
         public ScanStorageListData(List<IPAddress> input = null)
         {
-            IPAddresses = new List<IPAddress>();
-            if (input != null) IPAddresses.AddRange(input);
+            IpAddresses = new List<IPAddress>();
+            if (input != null) IpAddresses.AddRange(input);
         }
 
         public ScanStorageListData(IPAddress[] input = null)
         {
-            IPAddresses = new List<IPAddress>();
-            if (input != null) IPAddresses.AddRange(input);
+            IpAddresses = new List<IPAddress>();
+            if (input != null) IpAddresses.AddRange(input);
         }
     }
 
@@ -45,6 +46,7 @@ namespace JScan.Net.Data
     {
         public ScanStorageRangeData(List<AddressByteCollection> input = null)
         {
+            throw new NotImplementedException();
             //MaskData = new List<AddressByteCollection>();
             //if (input != null) MaskData.AddRange(input);
         }

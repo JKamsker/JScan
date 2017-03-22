@@ -11,8 +11,7 @@ namespace JScan.Net.Scan
 {
     public class PingScan
     {
-        public bool PingCompleted { get { return _pingCompleted; } }
-        private bool _pingCompleted;
+        public bool PingCompleted { get; private set; }
 
         private readonly int _pingTimeout;
         private readonly PingOptions _pingOptions = null;
@@ -25,7 +24,7 @@ namespace JScan.Net.Scan
         /// </summary>
         private Action<IPAddress> _scanSuccessCallback;
 
-        private int iRunningPingScanners = 0;
+        private int _iRunningPingScanners = 0;
 
         public PingScan(Action<IPAddress> scanSuccessCallback, int timeout = 10000)
         {
@@ -52,9 +51,9 @@ namespace JScan.Net.Scan
                 else
                 {
                     uClimiter++;
-                    iRunningPingScanners++;
+                    _iRunningPingScanners++;
                     var pingSender = new Ping();
-                    pingSender.PingCompleted += new PingCompletedEventHandler(PingCompletedCallback);
+                    pingSender.PingCompleted += PingCompletedCallback;
                     pingSender.SendAsync(address, _pingTimeout, Encoding.ASCII.GetBytes("a"), _pingOptions);
                 }
             }
@@ -67,7 +66,7 @@ namespace JScan.Net.Scan
         /// <param name="e"></param>
         private void PingCompletedCallback(object sender, PingCompletedEventArgs e)
         {
-            IPAddress NextScanAddress = null;
+            IPAddress nextScanAddress = null;
             uint uiAddress = e.Reply.Address.ToUint();
 
             if (uiAddress != 0) //Happens some times that the ip is 0
@@ -80,20 +79,20 @@ namespace JScan.Net.Scan
                 else if (!DScanStatus[e.Reply.Address.ToUint()])
                 {
                     DScanStatus[e.Reply.Address.ToUint()] = true;
-                    NextScanAddress = e.Reply.Address;
+                    nextScanAddress = e.Reply.Address;
                 }
             }
 
-            while (NextScanAddress == null && AddressQueue.Count != 0)
-                AddressQueue.TryDequeue(out NextScanAddress);
+            while (nextScanAddress == null && AddressQueue.Count != 0)
+                AddressQueue.TryDequeue(out nextScanAddress);
 
-            if (NextScanAddress != null)
-                ((Ping)sender).SendAsync(NextScanAddress, _pingTimeout, Encoding.ASCII.GetBytes("a"), _pingOptions);
+            if (nextScanAddress != null)
+                ((Ping)sender).SendAsync(nextScanAddress, _pingTimeout, Encoding.ASCII.GetBytes("a"), _pingOptions);
             else
             {
-                Interlocked.Decrement(ref iRunningPingScanners);
-                _pingCompleted = (iRunningPingScanners == 0 && AddressQueue.Count == 0);
-                if (_pingCompleted)
+                Interlocked.Decrement(ref _iRunningPingScanners);
+                PingCompleted = (_iRunningPingScanners == 0 && AddressQueue.Count == 0);
+                if (PingCompleted)
                 {
                     _scanSuccessCallback?.Invoke(null);
                 }

@@ -5,47 +5,47 @@ using System.Net.Sockets;
 
 namespace JScan.Net.Scan
 {
-    public class TCPScan : IDisposable
+    public class TcpScan : IDisposable
     {
-        public ETCPortState TcpState { get; private set; }
+        public EtcPortState TcpState { get; private set; }
         public IPAddress Host { get; private set; }
         public int Port { get; private set; }
 
-        private Action<TCPScan> _cbaPortScanFinished;
+        private Action<TcpScan> _cbaPortScanFinished;
 
         private TcpClient _tcpcli;
 
-        internal TCPScan(IPAddress host, int port, Action<TCPScan> portScanFinishedCallback)
+        internal TcpScan(IPAddress host, int port, Action<TcpScan> portScanFinishedCallback)
         {
             _cbaPortScanFinished = portScanFinishedCallback;
-            TcpState = ETCPortState.init;
+            TcpState = EtcPortState.Init;
             Host = host;
             Port = port;
 
-            AsyncCallback cllbck = new AsyncCallback(PortScanCompletedCallback);
+            var cllbck = new AsyncCallback(PortScanCompletedCallback);
             _tcpcli = new TcpClient(AddressFamily.InterNetwork);
             _tcpcli.BeginConnect(host, port, cllbck, null);
-            TcpState = ETCPortState.started;
+            TcpState = EtcPortState.Started;
         }
 
         private void PortScanCompletedCallback(IAsyncResult ar)
         {
             if (_tcpcli.Connected)
             {
-                TcpState = ETCPortState.open;
+                TcpState = EtcPortState.Open;
                 _tcpcli.Close();
             }
             else
             {
                 //Offline
-                TcpState = ETCPortState.closed;
+                TcpState = EtcPortState.Closed;
             }
             _tcpcli = null;
 
             _cbaPortScanFinished?.Invoke(this);
         }
 
-        ~TCPScan()
+        ~TcpScan()
         {
             Dispose();
         }

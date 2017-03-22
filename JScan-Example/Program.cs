@@ -20,30 +20,31 @@ namespace JScan_Example
         private static void TestScanAsyncronously()
         {
             //Initialize a new Settings object
-            ScanSettings ScS = new ScanSettings(
-                 scanPorts: new UInt16[] { 22 },    //Define which ports should be searched for
-                 ipmode: EIPScanMode.AllSubnet,      //Scan all ips from my subnet
-                 mode: EScanMode.AsyncProgressive,   //Don't block the current progress and call the callback: on finish, on ip dedection
-                 pingtimeout: (int)TimeSpan.FromSeconds(2).TotalMilliseconds //Timeout for pings
-           );
+            ScanSettings scs;
+            scs = new ScanSettings(
+                scanPorts: new UInt16[] { 22 },    //Define which ports should be searched for
+                ipmode: EipScanMode.AllSubnet,      //Scan all ips from my subnet
+                mode: EScanMode.AsyncProgressive,   //Don't block the current progress and call the callback: on finish, on ip dedection
+                pingtimeout: (int)TimeSpan.FromSeconds(2).TotalMilliseconds //Timeout for pings
+            );
 
             //Action which is called when an open port/online ip is found
-            ScS.progressiveAsyncScanStatusChangedCallback = new Action<TCPScan>((TCPScan ar) =>
+            scs.ProgressiveAsyncScanStatusChangedCallback = ar =>
             {
-                if (ar.TcpState == ETCPortState.open)
+                if (ar.TcpState == EtcPortState.Open)
                 {
                     Console.WriteLine("{0}:{1} {2}", ar.Host, ar.Port, ar.TcpState);
                 }
-            });
+            };
 
             //This one is called when the scan has been finished
-            ScS.completeAsyncScanFinishedCallback = new Action<Dictionary<IPAddress, Dictionary<int, ETCPortState>>>(ar =>
+            scs.CompleteAsyncScanFinishedCallback = ar =>
             {
                 Console.WriteLine("Finished Scan asyncronously");
-            });
+            };
 
             //Initialize the actual scanwrapper with the settings object
-            ScanWrapper sw = new ScanWrapper(ScS);
+            ScanWrapper sw = new ScanWrapper(scs);
             //Run the scan
             sw.ExecuteScan();
         }
@@ -56,10 +57,10 @@ namespace JScan_Example
             //Initialize a new Settings object
             ScanSettings ScS = new ScanSettings(
                    scanPorts: new UInt16[] { 80 },  //Define which ports should be searched for
-                   ipmode: EIPScanMode.List,         //Scan for a list of ip's
+                   ipmode: EipScanMode.List,         //Scan for a list of ip's
                    mode: EScanMode.Synchronous,      //Run syncronously
                    pingtimeout: (int)TimeSpan.FromSeconds(2).TotalMilliseconds, //Timeout for pings
-                   StorageData: (IScanStorage)new ScanStorageListData(new[] {
+                   storageData: (IScanStorage)new ScanStorageListData(new[] {
                        IPAddress.Parse("10.0.0.1"), //IP 1 to scan for
                        IPAddress.Parse("10.0.0.2"), //IP 2 to scan for
                    })
@@ -74,10 +75,10 @@ namespace JScan_Example
             //In (ScanWrapper)sw.Results are the results (IP:PORT)
             var res = sw.Results;
 
-            foreach (var cIP in res.Keys)
+            foreach (var cIp in res.Keys)
             {
-                var cres = res[cIP];
-                Console.WriteLine("{0}:", cIP);
+                var cres = res[cIp];
+                Console.WriteLine("{0}:", cIp);
                 foreach (var port in cres.Keys)
                 {
                     Console.WriteLine("\t{0}:{1}", port, cres[port].ToString());

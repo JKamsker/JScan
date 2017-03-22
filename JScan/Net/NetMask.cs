@@ -33,7 +33,7 @@ namespace JScan.Net
         /// Get all IPAdresses which are in the current subnet
         /// </summary>
         /// <returns></returns>
-        public static List<IPAddress> GetAllIP()
+        public static List<IPAddress> GetAllIp()
         {
             var retVar = new List<IPAddress>();
 
@@ -54,9 +54,8 @@ namespace JScan.Net
             return retVar;
         }
 
-
         /// <summary>
-        /// Calculate all ips between the two ones 
+        /// Calculate all ips between the two ones
         /// </summary>
         /// <param name="ip1"></param>
         /// <param name="ip2"></param>
